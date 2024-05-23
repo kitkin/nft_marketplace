@@ -1,8 +1,23 @@
 import { useState } from 'react'
 import { ethers } from "ethers"
 import { Row, Form, Button } from 'react-bootstrap'
-import { create as ipfsHttpClient } from 'ipfs-http-client'
-const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
+// import * as Client from '@web3-storage/w3up-client'
+// const client = await Client.create()
+
+// import { filesFromPaths } from 'files-from-path'
+ 
+// e.g "./best-gifs"
+// const path = './hug.png'
+// const files = await filesFromPaths([path])
+// const file = await fileFromPath(path)
+ 
+
+// const directoryCid = await client.uploadDirectory(files)
+// const fileCid = await client.uploadFile(files)
+
+// const fileURL = "https://"+directoryCid+".ipfs.w3s.link/"+path;
+
+// https://bafybeiblt72ngwp6osffewuyrovxcu3raynt6y2xgwluohdkixcyqgl5za.ipfs.w3s.link/hug.png
 
 const Create = ({ marketplace, nft }) => {
   const [image, setImage] = useState('')
@@ -14,25 +29,27 @@ const Create = ({ marketplace, nft }) => {
     const file = event.target.files[0]
     if (typeof file !== 'undefined') {
       try {
-        const result = await client.add(file)
-        console.log(result)
-        setImage(`https://ipfs.infura.io/ipfs/${result.path}`)
+        // const fileCid = await client.uploadFile(file)
+        // console.log(fileCid)
+        // setImage(`https://ipfs.infura.io/ipfs/${result.path}`)
+        setImage(`https://bafybeiblt72ngwp6osffewuyrovxcu3raynt6y2xgwluohdkixcyqgl5za.ipfs.w3s.link/hug.png`)
       } catch (error){
         console.log("ipfs image upload error: ", error)
       }
     }
   }
   const createNFT = async () => {
-    if (!image || !price || !name || !description) return
+    if (!price || !name || !description) return
     try{
-      const result = await client.add(JSON.stringify({image, price, name, description}))
-      mintThenList(result)
+      // const result = await client.add(JSON.stringify({image, price, name, description}))
+      mintThenList()
     } catch(error) {
       console.log("ipfs uri upload error: ", error)
     }
   }
   const mintThenList = async (result) => {
-    const uri = `https://ipfs.infura.io/ipfs/${result.path}`
+    // const uri = `https://ipfs.infura.io/ipfs/${result.path}`
+    const uri = `https://bafybeiblt72ngwp6osffewuyrovxcu3raynt6y2xgwluohdkixcyqgl5za.ipfs.w3s.link/hug.png`
     // mint nft 
     await(await nft.mint(uri)).wait()
     // get tokenId of new nft 
@@ -57,7 +74,7 @@ const Create = ({ marketplace, nft }) => {
               />
               <Form.Control onChange={(e) => setName(e.target.value)} size="lg" required type="text" placeholder="Name" />
               <Form.Control onChange={(e) => setDescription(e.target.value)} size="lg" required as="textarea" placeholder="Description" />
-              <Form.Control onChange={(e) => setPrice(e.target.value)} size="lg" required type="number" placeholder="Price in ETH" />
+              <Form.Control onChange={(e) => setPrice(e.target.value)} size="lg" required type="number" placeholder="Price in FTN" />
               <div className="d-grid px-0">
                 <Button onClick={createNFT} variant="primary" size="lg">
                   Create & List NFT!
